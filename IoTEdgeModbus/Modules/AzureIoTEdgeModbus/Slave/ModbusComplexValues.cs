@@ -14,11 +14,11 @@ namespace AzureIoTEdgeModbus.Slave
 
     public class ModbusComplexValues
     {
-        public static Int16[] SplitComplextValue(string valueType, string value)
+        public static Int16[] SplitComplexValue(bool isFloat, float value)
         {
-            switch (valueType)
+            switch (isFloat)
             {
-                case ModbusComplexValuesTypes.Float:
+                case true:
                     return SplitFloat(value);
                 default:
                     return new Int16[2];
@@ -37,10 +37,10 @@ namespace AzureIoTEdgeModbus.Slave
             }
         }
 
-        private static Int16[] SplitFloat(string value)
+        private static Int16[] SplitFloat(float value)
         {
-            float f = float.Parse(value);
-            byte[] bf = BitConverter.GetBytes(f);
+           //float f = float.Parse(value);
+            byte[] bf = BitConverter.GetBytes(value);
 
             var p1 = BitConverter.ToInt16(bf.SubArray(0, 2), 0);
             var p2 = BitConverter.ToInt16(bf.SubArray(2, 2), 0);

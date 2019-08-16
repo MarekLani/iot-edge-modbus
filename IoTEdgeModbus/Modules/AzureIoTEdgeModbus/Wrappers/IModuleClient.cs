@@ -11,7 +11,7 @@
     {
         Task OpenAsync();
         Task SendEventAsync(string outputName, Message message);
-        Task SetInputMessageHandlerAsync(string inputName, MessageHandler messageHandler, object userContext, CancellationToken cancellationToken);
+        Task SetInputMessageHandlerAsync(string inputName, MessageHandler messageHandler, CancellationToken cancellationToken);
         Task SetDesiredPropertyUpdateCallbackAsync(DesiredPropertyUpdateCallback callback, object userContext, CancellationToken cancellationToken);
         Task UpdateReportedPropertiesAsync(TwinCollection reportedProperties, CancellationToken cancellationToken);
         Task<Twin> GetTwinAsync(CancellationToken cancellationToken);

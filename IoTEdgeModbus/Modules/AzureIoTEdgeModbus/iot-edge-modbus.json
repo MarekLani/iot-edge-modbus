@@ -3,15 +3,15 @@
   "Version": "2",
   "SlaveConfigs": {
     "Slave01": {
-      "SlaveConnection": "52.165.30.205",
+      "SlaveConnection": "52.236.175.157",
       "HwId": "PowerMeter-0a:01:01:01:01:01",
       "RetryCount": 10,
       "RetryInterval": 50,
       "Operations": {
         "Op01": {
           "PollingInterval": 1000,
-          "UnitId":1,
-          "StartAddress": "40000",
+          "UnitId": 1,
+          "StartAddress": "40001",
           "Count": 2,
           "DisplayName": "Voltage",
           "CorrelationId": "MessageType1",
@@ -25,7 +25,7 @@
           "Count": 2,
           "DisplayName": "Current",
           "CorrelationId": "MessageType1",
-          "IsSimpleValue": false,
+          "IsSimpleValue": true,
           "ValueType": "float"
         }
       }

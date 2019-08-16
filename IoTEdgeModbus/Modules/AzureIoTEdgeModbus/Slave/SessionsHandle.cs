@@ -1,6 +1,10 @@
 ﻿namespace AzureIoTEdgeModbus.Slave
 {
+    using Microsoft.Azure.Devices.Client;
+    using Newtonsoft.Json;
+    using System;
     using System.Collections.Generic;
+    using System.Text;
     using System.Threading.Tasks;
 
     /// <summary>
@@ -118,6 +122,39 @@
             }
 
             return obj_list;
+        }
+
+        public async Task<MessageResponse> PipeMessage(Message message, object userContext)
+        {
+            Console.WriteLine("Modbus Writer - Received command");
+
+            byte[] messageBytes = message.GetBytes();
+            string messageString = Encoding.UTF8.GetString(messageBytes);
+            Console.WriteLine($"Received message with body: [{messageString}]");
+
+            message.Properties.TryGetValue("command-type", out string cmdType);
+            if (cmdType == "ModbusWrite")
+            {
+                // Get message body, containing the write target and value
+                var writeOperation = JsonConvert.DeserializeObject<WriteOperation>(messageString);
+
+                if (writeOperation != null)
+                {
+                    Console.WriteLine($"Write device {writeOperation.HwId}, " +
+                        $"address: {writeOperation.Address}, value: {writeOperation.Value}");
+
+                    ModbusSlaveSession target = this.GetSlaveSession(writeOperation.HwId);
+                    if (target == null)
+                    {
+                        Console.WriteLine($"target \"{writeOperation.HwId}\" not found!");
+                    }
+                    else
+                    {
+                        await target.WriteMessage(writeOperation);
+                    }
+                }
+            }
+            return MessageResponse.Completed;
         }
     }
 }

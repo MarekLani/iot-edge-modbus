@@ -44,7 +44,7 @@
 
             baseConfig.Operations = this.Operations.ToDictionary(
                 pair => pair.Key,
-                pair => new BaseReadOperation
+                pair => new ReadOperation
                 {
                     PollingInterval = pair.Value.PollingInterval,
                     UnitId = pair.Value.UnitId,

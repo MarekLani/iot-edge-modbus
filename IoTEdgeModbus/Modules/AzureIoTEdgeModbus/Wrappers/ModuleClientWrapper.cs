@@ -24,9 +24,9 @@
             return this.moduleClient.SendEventAsync(outputName, message);
         }
 
-        public Task SetInputMessageHandlerAsync(string inputName, MessageHandler messageHandler, object userContext, CancellationToken cancellationToken)
+        public Task SetInputMessageHandlerAsync(string inputName, MessageHandler messageHandler, CancellationToken cancellationToken)
         {
-            return this.moduleClient.SetInputMessageHandlerAsync(inputName, messageHandler, userContext, cancellationToken);
+            return this.moduleClient.SetInputMessageHandlerAsync(inputName, messageHandler, null, cancellationToken);
         }
 
         public Task SetMethodHandlerAsync(string methodName, MethodCallback methodHandler, object userContext)

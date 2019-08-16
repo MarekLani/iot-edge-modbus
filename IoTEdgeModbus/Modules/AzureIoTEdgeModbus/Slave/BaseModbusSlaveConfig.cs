@@ -46,6 +46,6 @@
         public string FlowControl { get; set; }
         #endregion
 
-        public Dictionary<string, BaseReadOperation> Operations;
+        public Dictionary<string, ReadOperation> Operations;
     }
 }

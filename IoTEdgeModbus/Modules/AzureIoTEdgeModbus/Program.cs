@@ -46,8 +46,12 @@ namespace Modbus.Containers
                             Console.WriteLine("IoT Hub module client and slave sessions initializing...");
                             await module.OpenConnectionAsync(serviceProvider.GetService<ISessionsHandle>(), cts.Token).ConfigureAwait(false);
 
-                            WhenCancelled(cts.Token).Wait();
-                        }
+                            var sessionsHandle = serviceProvider.GetService<ISessionsHandle>();
+                            await moduleClient.SetInputMessageHandlerAsync(
+                               "input1",
+                               ((SessionsHandle)sessionsHandle).PipeMessage, cts.Token);
+                               WhenCancelled(cts.Token).Wait();
+                            }
                     }
                 }
             }

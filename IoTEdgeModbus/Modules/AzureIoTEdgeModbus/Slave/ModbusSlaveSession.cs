@@ -65,13 +65,36 @@
             }
         }
 
-        public async Task WriteCB(string uid, ReadOperation readOperation, string value)
+        public async Task WriteMessage(WriteOperation operation)
+        {
+            if (operation.IsSimpleValue == false)
+            {
+
+                //Obtain value split into several int values
+                var valuesToBeWritten = ModbusComplexValues.SplitComplexValue(operation.IsFloat, operation.Value);
+                var addr = Convert.ToInt32(operation.Address);
+
+                //We need to write each part of complex value to separate registry
+                foreach (var v in valuesToBeWritten)
+                {
+                    operation.Value = v;
+                    await WriteCB(operation);
+                    operation.StartAddress = (Convert.ToInt32(operation.StartAddress)+1).ToString();
+                }
+            }
+            else
+            {
+                await WriteCB(operation);
+            }
+        }
+
+        public async Task WriteCB(WriteOperation operation)
         {
             byte[] writeRequest = new byte[m_bufSize];
             byte[] writeResponse = null;
             int reqLen = this.m_reqSize;
 
-            this.EncodeWrite(writeRequest, uid, readOperation, value);
+            this.EncodeWrite(writeRequest, operation);
 
             writeResponse = await this.SendRequest(writeRequest, reqLen);
         }
@@ -97,10 +120,12 @@
 
             this.m_semaphore_collection.Release();
         }
-        #endregion
 
-        #region Protected Methods
-        protected abstract void EncodeWrite(byte[] request, string uid, ReadOperation readOperation, string value);
+    
+    #endregion
+
+    #region Protected Methods
+    protected abstract void EncodeWrite(byte[] request, WriteOperation operation);
         protected abstract Task<byte[]> SendRequest(byte[] request, int reqLen);
         protected abstract Task ConnectSlave();
         protected abstract void EncodeRead(ReadOperation operation);
